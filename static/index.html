@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>AI Summarizer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: auto;
+      }
+      textarea {
+        width: 100%;
+      }
+      pre {
+        background: #f4f4f4;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Real-Time AI Summarizer</h1>
+
+    <textarea id="input" rows="10" placeholder="Paste text here..."></textarea>
+    <br /><br />
+    <button onclick="summarize()">Summarize</button>
+
+    <h2>Summary</h2>
+    <pre id="output"></pre>
+
+    <script>
+      function summarize() {
+        const text = document.getElementById("input").value;
+        const output = document.getElementById("output");
+
+        output.textContent = "";
+
+        const url = `/summarize?text=${encodeURIComponent(text)}`;
+        const eventSource = new EventSource(url);
+
+        eventSource.onmessage = function (event) {
+          output.textContent += event.data;
+        };
+
+        eventSource.onerror = function () {
+          eventSource.close();
+        };
+      }
+    </script>
+  </body>
+</html>
